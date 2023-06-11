@@ -27,7 +27,7 @@ export default function Home() {
                     ...errors,email:{status:false,message:""}
                 }))
                 const htmlString = ReactDOMServer.renderToString(Email(values))
-                fetch('http://localhost:3000/api/email',{
+                fetch('api/email',{
                     method:'POST',
                     headers: {
                         "Content-Type": "application/json",
