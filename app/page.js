@@ -1,42 +1,119 @@
 import Image from 'next/image'
+import Link from 'next/link';
 
-export default function Home() {
-  return (
-    
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-
+export default async function Home() {
+  let i = 0;
+  let res = await fetch('https://bunkpe.com/wp-json/wp/v2/posts')
+  // console.log(posts.headers.get('X-WP-TotalPages'));
+  let posts = await res.json();
+  
+  async function fetchImage(id){
+    if(id != 0){
+      let resp = await fetch('https://bunkpe.com/wp-json/wp/v2/media/'+id)
+      let img = await resp.json();
+      return img.link;
+    }
+    return id;
+  }
+  let data = [];
+  async function createData(){
+    for (const iterator of posts) {
+      let postData = [];
+      postData['title'] = iterator.title.rendered;
+      postData['img'] = await fetchImage(iterator.featured_media);
       
-    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="https://flowbite.com/" className="flex items-center">
-          <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 mr-3" alt="Flowbite Logo" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-      </a>
-      <div className="flex md:order-2">
-          <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Get started</button>
-          <button data-collapse-toggle="navbar-sticky" type="button" className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
-            <span className="sr-only">Open main menu</span>
-            <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"></path></svg>
-          </button>
+      data.push(postData);
+    }
+  }
+  await createData()
+  return (
+
+    <main className="flex min-h-screen flex-col items-center justify-between">
+      <div className="grid md:grid-cols-2 bg-amber-600 gap-5 md:gap-10 md:min-h-[calc(100vh-30vh)]" >
+        <div className="relative aspect-video md:aspect-auto">
+          <Link href="#">
+            <img alt="Thumbnail" src='/header.jpg' loading="lazy" className="object-cover w-full h-full absolute" />
+          </Link>
+        </div>
+        <div className="self-center px-5 pb-10">
+          <a>
+            <div className="max-w-2xl">
+              <h1 className="mt-2 mb-3 text-3xl font-semibold tracking-tight text-white lg:leading-tight text-brand-primary lg:text-5xl">Welcome to Bunk Pe, where digital marketing and web development meet excellence!</h1>
+              <div className="flex mt-4 space-x-3 text-gray-500 md:mt-8 ">
+                <div className="flex flex-col gap-3 md:items-center md:flex-row">
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex-shrink-0 w-5 h-5">
+                      {/* <img alt="Mario Sanchez" loading="lazy" src='https://images.pexels.com/photos/1758144/pexels-photo-1758144.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' className="object-cover rounded-full"  /> */}
+                    </div>
+                    <p className="text-gray-100 ">Captivate. Engage. Succeed. <span className="hidden pl-2 md:inline"> ·</span>
+                    </p>
+                  </div>
+                  <div>
+                    <div className="flex space-x-2 text-sm md:flex-row md:items-center">
+                      <time className="text-white" dateTime="2022-10-21T06:05:00.000Z">Unlock Your Business's Digital Potential.</time>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
       </div>
-      <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-        <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li>
-            <a href="#" className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
-          </li>
-          <li>
-            <a href="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
-          </li>
-          <li>
-            <a href="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
-          </li>
-          <li>
-            <a href="#" className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
-          </li>
-        </ul>
+      <div className="container px-8 mx-auto xl:px-5  max-w-screen-xl py-5 lg:py-8">
+        <div className="flex items-center justify-center mt-10">
+          <h2 className="text-2xl">
+            <strong>Featured</strong> Posts
+          </h2>
+        </div>
+        <div className="grid gap-10 mt-10 mb-20 lg:gap-10 md:grid-cols-3 lg:grid-cols-4 ">
+          {
+            data.map((singleData)=>{
+              {
+                return(i==0?
+                  <div key={singleData.title+i} className="md:col-span-2 md:row-span-2">
+                  <div className="group cursor-pointer">
+                    <div className=" overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105   dark:bg-gray-800">
+                      <Link className="relative block aspect-[5/4]" href={"posts/"+singleData.title}>
+                        <img src={singleData.img} className="object-cover transition-all absolute h-full w-full" />
+                      </Link>
+                    </div>
+                    
+                    <div className="">
+                      <div>
+                        <h2 className="text-2xl line-clamp-2 font-medium  tracking-normal text-black mt-2    dark:text-white">
+                          <p className='hidden'>{++i}</p>
+                          <Link href={"posts/"+singleData.title}>
+                            <span className="bg-gradient-to-r from-green-200 to-green-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_3px] group-hover:bg-[length:100%_10px] dark:from-purple-800 dark:to-purple-900">{singleData.title}</span>
+                          </Link>
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              :
+                <div key={singleData.title+i} className="group cursor-pointer">
+                  <div className=" overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105 dark:bg-gray-800">
+                    <Link href={"posts/"+singleData.title} className="relative block aspect-video" >
+                      <img src={singleData.img} className="object-cover transition-all absolute h-full w-full" />
+                    </Link>
+                  </div>
+                  <div className="">
+                    <div>
+                      <h2 className="text-lg line-clamp-2 font-medium  tracking-normal text-black mt-2    dark:text-white">
+                        <Link href={"posts/"+singleData.title}>
+                          <span className="bg-gradient-to-r from-green-200 to-green-100 bg-[length:0px_10px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 hover:bg-[length:100%_3px] group-hover:bg-[length:100%_10px] dark:from-purple-800 dark:to-purple-900">{singleData.title}</span>
+                        </Link>
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+              
+            })
+          }
+        </div>
       </div>
-      </div>
-    </nav>
     </main>
   )
 }

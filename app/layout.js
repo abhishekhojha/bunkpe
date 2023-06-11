@@ -1,7 +1,7 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { Roboto_Flex } from 'next/font/google'
+import {Navbar} from './component/navbar'
+const roboto = Roboto_Flex({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',
@@ -11,7 +11,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className} suppressHydrationWarning={true}>{children}</body>
+      
+      <body className={roboto.className} suppressHydrationWarning={true}>
+        <Navbar />
+        {children}
+        <div className="container px-8 mx-auto xl:px-5  max-w-screen-lg py-5 lg:py-8 mt-10 border-t border-gray-100 dark:border-gray-800"><div className="text-sm text-center">Copyright © 2023 Bunk pe. All rights reserved.</div></div>
+      </body>
     </html>
   )
 }
